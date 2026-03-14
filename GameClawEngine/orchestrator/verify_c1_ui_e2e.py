@@ -1,6 +1,15 @@
 """
 Sprint C.1 end-to-end verifier via real MCP UI clicks.
-Flow: start Godot with C1 init -> start mock orchestrator -> ui_click btn_attack x4 -> verify final IR + event log + illegal patch DoD5.
+Flow: start Godot with C1 init -> start mock orchestrator -> ui_click btn_attack x4
+      -> verify final IR + event log + illegal patch DoD5.
+
+Public API (for regression_runner.py):
+    run_e2e(log_dir: Path | None = None) -> int
+        Returns 0 on pass, non-zero on failure.
+        log_dir defaults to PROJECT / "artifacts".
+
+CLI:
+    python verify_c1_ui_e2e.py
 """
 from __future__ import annotations
 
@@ -32,6 +41,8 @@ def _find_godot() -> Path:
 
 
 def _set_initial_path(to_c1: bool) -> None:
+    # TODO(phase2): replace with runtime env var / launch arg override so
+    # project.godot is never written during tests (avoids concurrent corruption).
     text = PROJECT_GODOT.read_text(encoding="utf-8")
     src = 'config/initial_ir_path="res://test_data/initial_state.toon"'
     dst = 'config/initial_ir_path="res://test_data/sprint_c1_init.toon"'
@@ -96,20 +107,44 @@ def _result_value(resp: dict[str, object]) -> object:
     return data.get("value")
 
 
-def main() -> int:
+def run_e2e(log_dir: Path | None = None) -> int:
+    """
+    Execute the C.1 Golden Case end-to-end test.
+
+    Args:
+        log_dir: Directory for log files. Defaults to PROJECT/artifacts.
+
+    Returns:
+        0 on pass, 1 on unexpected error, 2 on assertion failure.
+    """
+    if log_dir is None:
+        log_dir = PROJECT / "artifacts"
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    godot_log = log_dir / "e2e_godot.log"
+    orch_log = log_dir / "e2e_orchestrator.log"
+
     _set_initial_path(True)
     _kill_godot()
 
-    godot_log = PROJECT / "sprint_c1_e2e_godot.log"
-    orch_log = PROJECT / "sprint_c1_e2e_orchestrator.log"
     with godot_log.open("w", encoding="utf-8") as gf:
         godot_exe = _find_godot()
-        godot_proc = subprocess.Popen([str(godot_exe), "--path", ".", "--headless", "main.tscn"], cwd=PROJECT, stdout=gf, stderr=subprocess.STDOUT)
+        godot_proc = subprocess.Popen(
+            [str(godot_exe), "--path", ".", "--headless", "main.tscn"],
+            cwd=PROJECT,
+            stdout=gf,
+            stderr=subprocess.STDOUT,
+        )
     try:
         _wait_port()
 
         with orch_log.open("w", encoding="utf-8") as of:
-            orch_proc = subprocess.Popen([sys.executable, str(ORCH)], cwd=PROJECT, stdout=of, stderr=subprocess.STDOUT)
+            orch_proc = subprocess.Popen(
+                [sys.executable, str(ORCH)],
+                cwd=PROJECT,
+                stdout=of,
+                stderr=subprocess.STDOUT,
+            )
 
         try:
             time.sleep(1.0)
@@ -125,7 +160,12 @@ def main() -> int:
             alive = _call("query_ir_path", {"path": "/entities/enemy/alive"}, req_id=1005)
             ev = _call("get_event_log", {"since_seq": 0, "limit": 20}, req_id=1006)
 
-            illegal = subprocess.run([sys.executable, str(ORCH), "--test-illegal"], cwd=PROJECT, capture_output=True, text=True)
+            illegal = subprocess.run(
+                [sys.executable, str(ORCH), "--test-illegal"],
+                cwd=PROJECT,
+                capture_output=True,
+                text=True,
+            )
 
             out = {
                 "ui_click": r1,
@@ -159,6 +199,11 @@ def main() -> int:
         except subprocess.TimeoutExpired:
             godot_proc.kill()
         _set_initial_path(False)
+
+
+def main() -> int:
+    """CLI entry point."""
+    return run_e2e()
 
 
 if __name__ == "__main__":

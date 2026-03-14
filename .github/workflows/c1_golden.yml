@@ -1,0 +1,95 @@
+name: C.1 Golden Case Regression
+
+on:
+  push:
+    branches:
+      - feature/gameclaw-engine-c1
+    paths:
+      - "GameClawEngine/**"
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.6.1-stable"
+  GODOT_FILENAME: "Godot_v4.6.1-stable_win64_console.exe"
+  GODOT_ZIP: "Godot_v4.6.1-stable_win64_console.exe.zip"
+  GODOT_DOWNLOAD_URL: "https://github.com/godotengine/godot/releases/download/4.6.1-stable/Godot_v4.6.1-stable_win64_console.exe.zip"
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  c1-golden:
+    name: C.1 Golden Case (windows-latest)
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        working-directory: GameClawEngine
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache Godot executable
+        id: cache-godot-exe
+        uses: actions/cache@v4
+        with:
+          path: GameClawEngine/${{ env.GODOT_FILENAME }}
+          key: godot-exe-${{ env.GODOT_VERSION }}
+
+      - name: Download Godot
+        if: steps.cache-godot-exe.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "$env:GODOT_DOWNLOAD_URL" -OutFile "$env:GODOT_ZIP"
+          Expand-Archive -Path "$env:GODOT_ZIP" -DestinationPath "." -Force
+          Remove-Item "$env:GODOT_ZIP"
+          Write-Host "Godot downloaded: $env:GODOT_FILENAME"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Cache .godot import directory
+        id: cache-godot-import
+        uses: actions/cache@v4
+        with:
+          path: GameClawEngine/.godot
+          key: godot-import-${{ env.GODOT_VERSION }}-${{ hashFiles('GameClawEngine/**/*.tscn', 'GameClawEngine/**/*.gd', 'GameClawEngine/project.godot') }}
+          restore-keys: |
+            godot-import-${{ env.GODOT_VERSION }}-
+
+      - name: Pre-warm Godot import (cache miss only)
+        # On cache miss, Godot headless first run may output non-zero exit code
+        # or hang without --quit. We run --import --quit and tolerate failures.
+        if: steps.cache-godot-import.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          Write-Host "Running Godot import pre-warm..."
+          $proc = Start-Process -FilePath ".\$env:GODOT_FILENAME" `
+            -ArgumentList "--path", ".", "--headless", "--import", "--quit" `
+            -NoNewWindow -PassThru -Wait -RedirectStandardOutput "import_warmup.log" `
+            -RedirectStandardError "import_warmup_err.log"
+          $exitCode = $proc.ExitCode
+          Write-Host "Pre-warm exit code: $exitCode (non-zero is expected on first import)"
+          Get-Content "import_warmup.log" -ErrorAction SilentlyContinue | Select-Object -Last 20
+          # Do not fail the step on non-zero exit — first import often exits with code 255
+          exit 0
+
+      - name: Run C.1 Golden Case regression
+        run: python regression_runner.py --repeat 1 --ci
+
+      - name: Upload artifacts (always)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: c1-golden-artifacts-${{ github.run_number }}
+          path: |
+            GameClawEngine/artifacts/
+            GameClawEngine/import_warmup.log
+            GameClawEngine/import_warmup_err.log
+          if-no-files-found: ignore
+          retention-days: 14
