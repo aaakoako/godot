@@ -395,3 +395,9 @@ $RECYCLE.BIN/
 *.msp
 *.lnk
 *.generated.props
+
+###########################
+### Local / temporary    ###
+###########################
+tmp_*
+.cursor/

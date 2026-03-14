@@ -1,0 +1,32 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="GameClawEngine"
+config/description="AI-Native Game Engine MVP - TOON IR + Runtime Projection"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.6", "Forward Plus")
+config/initial_ir_path="res://test_data/initial_state.toon"
+
+[autoload]
+
+IRManager="*res://scripts/core/ir_manager.gd"
+EventOutbox="*res://scripts/autoload/event_outbox.gd"
+MCPTCPServer="*res://addons/gameclaw_mcp/tcp_server.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gameclaw_mcp/plugin.cfg")

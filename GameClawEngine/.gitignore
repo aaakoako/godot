@@ -1,0 +1,21 @@
+# Godot editor cache & generated
+.godot/
+
+# Godot engine binaries (use system/CI install)
+*.exe
+
+# Runtime / dev logs
+*.log
+
+# Python
+__pycache__/
+.venv/
+venv/
+*.pyc
+*.pyo
+
+# Windows reserved name (cannot be indexed by Git on Windows)
+nul
+
+# IDE / editor (optional: remove .cursor/ if you want to commit Cursor rules)
+# .cursor/

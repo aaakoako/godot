@@ -1,0 +1,63 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/ui_controller.gd" id="1_ui"]
+
+[node name="Main" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.92388, 0.382683, 0, -0.382683, 0.92388, 0, 3, 7)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 5, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="EntityRoot" type="Node3D" parent="."]
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_ui")
+
+[node name="IRoot" type="Control" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -260.0
+offset_right = 510.0
+offset_bottom = -10.0
+grow_vertical = 0
+
+[node name="ApplyPatchButton" type="Button" parent="UI/VBox"]
+layout_mode = 2
+text = "Apply Test Patch"
+
+[node name="PatchInput" type="TextEdit" parent="UI/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 120)
+placeholder_text = "Enter TOON Patch here..."
+
+[node name="ApplyCustomButton" type="Button" parent="UI/VBox"]
+layout_mode = 2
+text = "Apply Custom Patch"
+
+[node name="ResultLabel" type="Label" parent="UI/VBox"]
+layout_mode = 2
+text = "Ready."
+
+[connection signal="pressed" from="UI/VBox/ApplyPatchButton" to="UI" method="_on_apply_patch_pressed"]
+[connection signal="pressed" from="UI/VBox/ApplyCustomButton" to="UI" method="_on_apply_custom_pressed"]

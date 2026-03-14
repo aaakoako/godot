@@ -1,0 +1,21 @@
+version: 1.0.0
+metadata:
+  name: MVP Demo Scene
+  description: A test scene with two entities
+entities:
+  box_1:
+    type: cube
+    transform:
+      position[3]: 0,0,0
+      rotation[3]: 0,0,0
+      scale[3]: 1,1,1
+    material:
+      color: "#FF0000"
+  sphere_1:
+    type: sphere
+    transform:
+      position[3]: 3,1,0
+      rotation[3]: 0,0,0
+      scale[3]: 1,1,1
+    material:
+      color: "#00FF00"

@@ -1,0 +1,24 @@
+version: sprint_c1_attack_dummy_v1
+metadata: {}
+entities:
+  enemy:
+    type: combat_dummy
+    hp: 3
+    alive: true
+  lbl_enemy_hp:
+    type: label
+    text: "Enemy HP: 3"
+    position[2]: 60,40
+    font_size: 24
+    color[4]: 1,0,0,1
+  lbl_message:
+    type: label
+    text: "A slime appears."
+    position[2]: 60,80
+    font_size: 18
+    color[4]: 1,1,1,1
+  btn_attack:
+    type: button
+    text: "Attack!"
+    position[2]: 60,130
+    size[2]: 120,40

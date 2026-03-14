@@ -1,0 +1,10 @@
+version: 1.1.0
+description: GameClawEngine Game IR Schema v1.1
+required_root_fields[3]: version,metadata,entities
+entity_types[7]: cube,sphere,plane,sprite,combat_dummy,label,button
+transform_fields[3]: position,rotation,scale
+transform_component_size: 3
+material_fields[1]: color
+color_pattern: ^#[0-9A-Fa-f]{6}$
+ui_fields[4]: text,font_size,position,size
+combat_dummy_fields[2]: hp,alive
