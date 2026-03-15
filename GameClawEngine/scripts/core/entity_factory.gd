@@ -3,17 +3,26 @@
 class_name EntityFactory
 extends RefCounted
 
-## Valid entity types as defined in Game IR v1 schema (3D + Sprint C.1 UI).
-var _valid_types: Array[String] = ["cube", "sphere", "plane", "sprite", "combat_dummy", "label", "button"]
+## Valid entity types as defined in Game IR v1 schema (3D + Sprint C.1 UI + Phase 2).
+var _valid_types: Array[String] = ["cube", "sphere", "plane", "sprite", "combat_dummy", "label", "button", "game_entity"]
+
+const AttributeSetComponentScript = preload("res://scripts/core/components/attribute_set_component.gd")
+const TagSetComponentScript = preload("res://scripts/core/components/tag_set_component.gd")
+const LifecycleComponentScript = preload("res://scripts/core/components/lifecycle_component.gd")
+const PresentationComponentScript = preload("res://scripts/core/components/presentation_component.gd")
+const Transform2DComponentScript = preload("res://scripts/core/components/transform_2d_component.gd")
 
 
 ## Create a Godot Node from an IR entity dictionary.
-## Returns Node3D, Control (Label/Button), or null (e.g. combat_dummy).
+## Returns Node3D, Control (Label/Button), Node (game_entity), or null (e.g. combat_dummy).
 func create(entity_id: String, entity_data: Dictionary) -> Node:
 	var entity_type: String = entity_data.get("type", "")
 	if entity_type not in _valid_types:
 		push_error("EntityFactory: unknown entity type '%s' for '%s'" % [entity_type, entity_id])
 		return null
+
+	if entity_type == "game_entity":
+		return _create_game_entity(entity_id, entity_data)
 
 	if entity_type == "combat_dummy":
 		return null
@@ -33,6 +42,90 @@ func create(entity_id: String, entity_data: Dictionary) -> Node:
 	_apply_transform(mesh_instance, entity_data)
 
 	return mesh_instance
+
+
+## Create a logical Node host for a game_entity and attach component children.
+func _create_game_entity(entity_id: String, entity_data: Dictionary) -> Node:
+	var host: Node = Node.new()
+	host.name = entity_id
+
+	var components: Variant = entity_data.get("components", {})
+	if components is not Dictionary:
+		return host
+
+	var comp_dict: Dictionary = components as Dictionary
+	for comp_type: String in comp_dict:
+		var comp_data: Variant = comp_dict[comp_type]
+		if comp_data is not Dictionary:
+			continue
+		var comp_node: Node = _create_component(comp_type, comp_data as Dictionary)
+		if comp_node != null:
+			comp_node.name = comp_type
+			host.add_child(comp_node)
+
+	return host
+
+
+func _create_component(comp_type: String, comp_data: Dictionary) -> Node:
+	var comp: Node
+	match comp_type:
+		"attribute_set":
+			comp = AttributeSetComponentScript.new()
+			(comp as AttributeSetComponent).sync_from_ir(comp_data)
+		"tag_set":
+			comp = TagSetComponentScript.new()
+			(comp as TagSetComponent).sync_from_ir(comp_data)
+		"lifecycle":
+			comp = LifecycleComponentScript.new()
+			(comp as LifecycleComponent).sync_from_ir(comp_data)
+		"presentation":
+			comp = PresentationComponentScript.new()
+			(comp as PresentationComponent).sync_from_ir(comp_data)
+		"transform_2d":
+			comp = Transform2DComponentScript.new()
+			(comp as Transform2DComponent).sync_from_ir(comp_data)
+		_:
+			return null
+	return comp
+
+
+## Sync a game_entity host node's components from updated IR data.
+func update_game_entity(host: Node, entity_data: Dictionary) -> void:
+	var components: Variant = entity_data.get("components", {})
+	if components is not Dictionary:
+		return
+	var comp_dict: Dictionary = components as Dictionary
+	for comp_type: String in comp_dict:
+		var comp_data: Variant = comp_dict[comp_type]
+		if comp_data is not Dictionary:
+			continue
+		var comp_node: Node = host.get_node_or_null(comp_type)
+		if comp_node == null:
+			var new_comp: Node = _create_component(comp_type, comp_data as Dictionary)
+			if new_comp != null:
+				new_comp.name = comp_type
+				host.add_child(new_comp)
+		else:
+			_sync_component(comp_node, comp_type, comp_data as Dictionary)
+
+
+func _sync_component(comp_node: Node, comp_type: String, comp_data: Dictionary) -> void:
+	match comp_type:
+		"attribute_set":
+			if comp_node is AttributeSetComponent:
+				(comp_node as AttributeSetComponent).sync_from_ir(comp_data)
+		"tag_set":
+			if comp_node is TagSetComponent:
+				(comp_node as TagSetComponent).sync_from_ir(comp_data)
+		"lifecycle":
+			if comp_node is LifecycleComponent:
+				(comp_node as LifecycleComponent).sync_from_ir(comp_data)
+		"presentation":
+			if comp_node is PresentationComponent:
+				(comp_node as PresentationComponent).sync_from_ir(comp_data)
+		"transform_2d":
+			if comp_node is Transform2DComponent:
+				(comp_node as Transform2DComponent).sync_from_ir(comp_data)
 
 
 func _create_label(entity_id: String, entity_data: Dictionary) -> Label:
@@ -74,6 +167,10 @@ func _apply_control_props(control: Control, entity_data: Dictionary) -> void:
 ## Update an existing node's visual properties from IR data.
 ## Used by the projection layer after a Patch modifies IR state.
 func update_node(node: Node, entity_data: Dictionary) -> void:
+	var entity_type: String = entity_data.get("type", "")
+	if entity_type == "game_entity":
+		update_game_entity(node, entity_data)
+		return
 	if node is Node3D:
 		_apply_transform(node as Node3D, entity_data)
 		if node is MeshInstance3D:

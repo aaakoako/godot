@@ -513,3 +513,93 @@ func _read_file(path: String) -> String:
 	var content: String = file.get_as_text()
 	file.close()
 	return content
+
+
+# ─── GAME ENTITY HELPERS (Phase 2 / Sprint D1) ────────────────────────────────
+# All writes go through apply_patch to preserve IR as single source of truth.
+
+## Return a single attribute dict {current, max} for a game_entity, or empty if not found.
+func get_attribute(entity_id: String, attr_name: String) -> Dictionary:
+	var path: String = "/entities/%s/components/attribute_set/attributes/%s" % [entity_id, attr_name]
+	var result: Dictionary = _resolve_ir_path(path)
+	if result["found"] and result["value"] is Dictionary:
+		return (result["value"] as Dictionary).duplicate()
+	return {}
+
+
+## Return a copy of the runtime_tags array for a game_entity, or empty array.
+func get_tags(entity_id: String) -> Array:
+	var path: String = "/entities/%s/components/tag_set/runtime_tags" % entity_id
+	var result: Dictionary = _resolve_ir_path(path)
+	if result["found"] and result["value"] is Array:
+		return (result["value"] as Array).duplicate()
+	return []
+
+
+## Return all tags (base + runtime) for a game_entity.
+func get_all_tags(entity_id: String) -> Array:
+	var base_path: String = "/entities/%s/components/tag_set/base_tags" % entity_id
+	var runtime_path: String = "/entities/%s/components/tag_set/runtime_tags" % entity_id
+	var base_result: Dictionary = _resolve_ir_path(base_path)
+	var runtime_result: Dictionary = _resolve_ir_path(runtime_path)
+	var combined: Array = []
+	if base_result["found"] and base_result["value"] is Array:
+		for t: Variant in (base_result["value"] as Array):
+			combined.append(t)
+	if runtime_result["found"] and runtime_result["value"] is Array:
+		for t: Variant in (runtime_result["value"] as Array):
+			if t not in combined:
+				combined.append(t)
+	return combined
+
+
+## Return true if a game_entity has the given tag in either base or runtime tags.
+func has_tag(entity_id: String, tag: String) -> bool:
+	return tag in get_all_tags(entity_id)
+
+
+## Add a runtime tag to a game_entity via patch. Returns apply_patch result.
+func add_runtime_tag(entity_id: String, tag: String) -> Dictionary:
+	var current_tags: Array = get_tags(entity_id)
+	if tag in current_tags:
+		return {"ok": true, "patch_applied": false, "reason": "tag already present"}
+	current_tags.append(tag)
+	var patch_str: String = JSON.stringify({
+		"ops": [{"op": "replace", "path": "/entities/%s/components/tag_set/runtime_tags" % entity_id, "value": current_tags}]
+	})
+	return apply_patch(patch_str)
+
+
+## Remove a runtime tag from a game_entity via patch. Returns apply_patch result.
+func remove_runtime_tag(entity_id: String, tag: String) -> Dictionary:
+	var current_tags: Array = get_tags(entity_id)
+	if tag not in current_tags:
+		return {"ok": true, "patch_applied": false, "reason": "tag not present"}
+	current_tags.erase(tag)
+	var patch_str: String = JSON.stringify({
+		"ops": [{"op": "replace", "path": "/entities/%s/components/tag_set/runtime_tags" % entity_id, "value": current_tags}]
+	})
+	return apply_patch(patch_str)
+
+
+## Resolve a slash-separated IR path to {found, value}. Internal helper.
+func _resolve_ir_path(path: String) -> Dictionary:
+	if not path.begins_with("/"):
+		return {"found": false, "value": null}
+	var segments: PackedStringArray = path.substr(1).split("/")
+	var current: Variant = _ir_state
+	for seg: String in segments:
+		if current is Dictionary:
+			if not (current as Dictionary).has(seg):
+				return {"found": false, "value": null}
+			current = (current as Dictionary)[seg]
+		elif current is Array:
+			if not seg.is_valid_int():
+				return {"found": false, "value": null}
+			var idx: int = seg.to_int()
+			if idx < 0 or idx >= (current as Array).size():
+				return {"found": false, "value": null}
+			current = (current as Array)[idx]
+		else:
+			return {"found": false, "value": null}
+	return {"found": true, "value": current}

@@ -12,6 +12,7 @@ const MCPPerceptionHandler = preload("res://addons/gameclaw_mcp/handlers/percept
 const MCPProbeHandler = preload("res://addons/gameclaw_mcp/handlers/probe_handler.gd")
 const MCPEvalHandler = preload("res://addons/gameclaw_mcp/handlers/eval_handler.gd")
 const MCPUIHandler = preload("res://addons/gameclaw_mcp/handlers/ui_handler.gd")
+const MCPEntityHandler = preload("res://addons/gameclaw_mcp/handlers/entity_handler.gd")
 
 var _handlers: Dictionary = {}
 var _handler_instances: Array = []
@@ -75,6 +76,7 @@ func _register_builtin_handlers() -> void:
 	MCPProbeHandler.register_tools(self)
 	MCPEvalHandler.register_tools(self)
 	MCPUIHandler.register_tools(self)
+	MCPEntityHandler.register_tools(self)
 
 
 func _handle_ping(params: Variant) -> Dictionary:

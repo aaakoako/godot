@@ -1,0 +1,28 @@
+version: sprint_d2_poison_v1
+metadata: {}
+entities:
+  hero_1:
+    type: game_entity
+    components:
+      attribute_set:
+        attributes:
+          hp:
+            current: 100
+            max: 100
+      tag_set:
+        base_tags[1]: unit.hero
+        runtime_tags[0]:
+      lifecycle:
+        alive: true
+        death_state: alive
+effect_defs:
+  poison_basic:
+    type: gameplay_effect_def
+    policy:
+      duration: 3.0
+      tick_rate: 1.0
+    modifiers[1]:
+      - attribute: hp
+        op: add
+        value: -1.0
+    granted_tags[1]: state.poisoned

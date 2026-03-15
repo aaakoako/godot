@@ -1,10 +1,18 @@
-version: 1.1.0
-description: GameClawEngine Game IR Schema v1.1
+version: 1.2.0
+description: GameClawEngine Game IR Schema v1.2 — adds game_entity + component system
 required_root_fields[3]: version,metadata,entities
-entity_types[7]: cube,sphere,plane,sprite,combat_dummy,label,button
+entity_types[8]: cube,sphere,plane,sprite,combat_dummy,label,button,game_entity
 transform_fields[3]: position,rotation,scale
 transform_component_size: 3
 material_fields[1]: color
 color_pattern: ^#[0-9A-Fa-f]{6}$
 ui_fields[4]: text,font_size,position,size
 combat_dummy_fields[2]: hp,alive
+game_entity_component_types[5]: attribute_set,tag_set,lifecycle,presentation,transform_2d
+attribute_set_fields[1]: attributes
+attribute_fields[2]: current,max
+tag_set_fields[2]: base_tags,runtime_tags
+lifecycle_fields[2]: alive,death_state
+lifecycle_death_states[3]: alive,dead,despawned
+presentation_fields[2]: icon_ref,model_ref
+transform_2d_fields[1]: position

@@ -1,0 +1,25 @@
+version: sprint_d1_entity_smoke_v1
+metadata: {}
+entities:
+  hero_1:
+    type: game_entity
+    components:
+      attribute_set:
+        attributes:
+          hp:
+            current: 100
+            max: 100
+          mana:
+            current: 20
+            max: 20
+      tag_set:
+        base_tags[2]: unit.hero,faction.player
+        runtime_tags[0]:
+      lifecycle:
+        alive: true
+        death_state: alive
+      presentation:
+        icon_ref: "sprite2d://hero_knight_icon"
+        model_ref: null
+      transform_2d:
+        position[2]: 100,100

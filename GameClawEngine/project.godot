@@ -21,6 +21,9 @@ config/initial_ir_path="res://test_data/initial_state.toon"
 IRManager="*res://scripts/core/ir_manager.gd"
 EventOutbox="*res://scripts/autoload/event_outbox.gd"
 MCPTCPServer="*res://addons/gameclaw_mcp/tcp_server.gd"
+EffectSystem="*res://scripts/autoload/effect_system.gd"
+AbilitySystem="*res://scripts/core/ability_system.gd"
+ProjectileSystem="*res://scripts/core/projectile_system.gd"
 
 [display]
 
