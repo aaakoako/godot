@@ -1,71 +1,77 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "assets": [
     {
       "asset_ref": "hero_idle_basic",
       "type": "sprite2d",
       "license_type": "CC0-1.0",
-      "source": "Kenney Game Assets",
-      "source_url": "https://kenney.nl/assets/space-RTS",
+      "source": "Kenney Game Assets — Sci-Fi RTS",
+      "source_url": "https://kenney.nl/assets/sci-fi-rts",
       "local_path": "assets/library/characters/hero_idle_basic.png",
+      "staging_path": "assets/staging/characters/hero_idle_basic.png",
       "fallback_color": "#4488FF",
-      "approval_status": "draft",
-      "notes": "Hero idle frame"
+      "approval_status": "approved",
+      "notes": "Unit/scifiUnit_01.png"
     },
     {
       "asset_ref": "enemy_idle_basic",
       "type": "sprite2d",
       "license_type": "CC0-1.0",
-      "source": "Kenney Game Assets",
-      "source_url": "https://kenney.nl/assets/space-RTS",
+      "source": "Kenney Game Assets — Sci-Fi RTS",
+      "source_url": "https://kenney.nl/assets/sci-fi-rts",
       "local_path": "assets/library/characters/enemy_idle_basic.png",
+      "staging_path": "assets/staging/characters/enemy_idle_basic.png",
       "fallback_color": "#FF4444",
-      "approval_status": "draft",
-      "notes": "Enemy idle frame"
+      "approval_status": "approved",
+      "notes": "Unit/scifiUnit_02.png"
     },
     {
       "asset_ref": "proj_fireball_basic",
       "type": "sprite2d",
       "license_type": "CC0-1.0",
-      "source": "Kenney Game Assets",
-      "source_url": "https://kenney.nl/assets/space-RTS",
-      "local_path": "assets/library/projectiles/fireball_basic.png",
+      "source": "Kenney Game Assets — Top-down Tanks Redux",
+      "source_url": "https://kenney.nl/assets/top-down-tanks-redux",
+      "local_path": "assets/library/projectiles/proj_fireball_basic.png",
+      "staging_path": "assets/staging/projectiles/proj_fireball_basic.png",
       "fallback_color": "#FF8800",
-      "approval_status": "draft",
-      "notes": "Fireball projectile"
+      "approval_status": "approved",
+      "notes": "explosion1.png"
     },
     {
       "asset_ref": "hud_panel_min",
       "type": "sprite2d",
       "license_type": "CC0-1.0",
-      "source": "Kenney Game Assets",
-      "source_url": "https://kenney.nl/assets/space-RTS",
+      "source": "Kenney Game Assets — Sci-Fi RTS",
+      "source_url": "https://kenney.nl/assets/sci-fi-rts",
       "local_path": "assets/library/ui/hud_panel_min.png",
+      "staging_path": "assets/staging/ui/hud_panel_min.png",
       "fallback_color": "#333333",
-      "approval_status": "draft",
-      "notes": "Minimal HUD panel background"
+      "approval_status": "approved",
+      "notes": "Environment/scifiEnvironment_01.png"
     },
     {
       "asset_ref": "status_poison_icon",
       "type": "sprite2d",
       "license_type": "CC0-1.0",
-      "source": "Kenney Game Assets",
-      "source_url": "https://kenney.nl/assets/space-RTS",
+      "source": "Kenney Game Assets — Game Icons",
+      "source_url": "https://kenney.nl/assets/game-icons",
       "local_path": "assets/library/ui/status_poison_icon.png",
+      "staging_path": "assets/staging/ui/status_poison_icon.png",
       "fallback_color": "#00FF00",
-      "approval_status": "draft",
-      "notes": "Poison status icon"
+      "approval_status": "approved",
+      "notes": "exclamation.png (White/2x) — no dedicated poison icon in Kenney CC0"
     },
     {
       "asset_ref": "status_burn_icon",
       "type": "sprite2d",
       "license_type": "CC0-1.0",
-      "source": "Kenney Game Assets",
-      "source_url": "https://kenney.nl/assets/space-RTS",
+      "source": "Kenney Game Assets — Game Icons",
+      "source_url": "https://kenney.nl/assets/game-icons",
       "local_path": "assets/library/ui/status_burn_icon.png",
+      "staging_path": "assets/staging/ui/status_burn_icon.png",
       "fallback_color": "#FF4400",
-      "approval_status": "draft",
-      "notes": "Burn status icon"
+      "approval_status": "approved",
+      "notes": "exclamation.png (White/2x) — no dedicated burn icon in Kenney CC0"
     }
   ]
 }
