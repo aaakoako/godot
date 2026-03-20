@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "assets": [
+    {
+      "asset_ref": "hero_idle_basic",
+      "type": "sprite2d",
+      "license_type": "CC0-1.0",
+      "source": "Kenney Game Assets",
+      "source_url": "https://kenney.nl/assets/space-RTS",
+      "local_path": "assets/library/characters/hero_idle_basic.png",
+      "fallback_color": "#4488FF",
+      "approval_status": "draft",
+      "notes": "Hero idle frame"
+    },
+    {
+      "asset_ref": "enemy_idle_basic",
+      "type": "sprite2d",
+      "license_type": "CC0-1.0",
+      "source": "Kenney Game Assets",
+      "source_url": "https://kenney.nl/assets/space-RTS",
+      "local_path": "assets/library/characters/enemy_idle_basic.png",
+      "fallback_color": "#FF4444",
+      "approval_status": "draft",
+      "notes": "Enemy idle frame"
+    },
+    {
+      "asset_ref": "proj_fireball_basic",
+      "type": "sprite2d",
+      "license_type": "CC0-1.0",
+      "source": "Kenney Game Assets",
+      "source_url": "https://kenney.nl/assets/space-RTS",
+      "local_path": "assets/library/projectiles/fireball_basic.png",
+      "fallback_color": "#FF8800",
+      "approval_status": "draft",
+      "notes": "Fireball projectile"
+    },
+    {
+      "asset_ref": "hud_panel_min",
+      "type": "sprite2d",
+      "license_type": "CC0-1.0",
+      "source": "Kenney Game Assets",
+      "source_url": "https://kenney.nl/assets/space-RTS",
+      "local_path": "assets/library/ui/hud_panel_min.png",
+      "fallback_color": "#333333",
+      "approval_status": "draft",
+      "notes": "Minimal HUD panel background"
+    },
+    {
+      "asset_ref": "status_poison_icon",
+      "type": "sprite2d",
+      "license_type": "CC0-1.0",
+      "source": "Kenney Game Assets",
+      "source_url": "https://kenney.nl/assets/space-RTS",
+      "local_path": "assets/library/ui/status_poison_icon.png",
+      "fallback_color": "#00FF00",
+      "approval_status": "draft",
+      "notes": "Poison status icon"
+    },
+    {
+      "asset_ref": "status_burn_icon",
+      "type": "sprite2d",
+      "license_type": "CC0-1.0",
+      "source": "Kenney Game Assets",
+      "source_url": "https://kenney.nl/assets/space-RTS",
+      "local_path": "assets/library/ui/status_burn_icon.png",
+      "fallback_color": "#FF4400",
+      "approval_status": "draft",
+      "notes": "Burn status icon"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+version: sprite_slice_v1
+metadata: {}
+entities:
+  hero:
+    type: game_entity
+    components:
+      presentation:
+        icon_ref: hero_idle_basic
+        fallback_color: "#4488FF"
+      transform_2d:
+        position[2]: 100,200
+  enemy:
+    type: game_entity
+    components:
+      presentation:
+        icon_ref: enemy_idle_basic
+        fallback_color: "#FF4444"
+      transform_2d:
+        position[2]: 400,200
+  hud_panel:
+    type: sprite
+    icon_ref: hud_panel_min
+    fallback_color: "#333333"
+    position[2]: 0,0
+    size[2]: 800,600

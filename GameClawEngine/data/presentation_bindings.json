@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "bindings": [
+    {
+      "entity_id": "hero",
+      "entity_type": "game_entity",
+      "components": {
+        "presentation": {
+          "icon_ref": "hero_idle_basic"
+        }
+      }
+    },
+    {
+      "entity_id": "enemy",
+      "entity_type": "game_entity",
+      "components": {
+        "presentation": {
+          "icon_ref": "enemy_idle_basic"
+        }
+      }
+    },
+    {
+      "entity_id": "hud_panel",
+      "entity_type": "sprite",
+      "material": {
+        "icon_ref": "hud_panel_min"
+      }
+    }
+  ]
+}

@@ -91,7 +91,14 @@ def main() -> int:
         "--ci", action="store_true",
         help="CI mode: suppress interactive output, print JSON summary to stdout on failure.",
     )
+    parser.add_argument(
+        "--initial-ir", dest="initial_ir", default=None,
+        help="Set GAMECLAW_INITIAL_IR_PATH env var to override the initial IR file loaded by Godot.",
+    )
     args = parser.parse_args()
+
+    if args.initial_ir:
+        os.environ["GAMECLAW_INITIAL_IR_PATH"] = args.initial_ir
 
     if args.repeat < 1:
         print("--repeat must be >= 1", file=sys.stderr)
