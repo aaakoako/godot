@@ -1,0 +1,16 @@
+---
+description: Core rules for GameClawEngine
+alwaysApply: true
+---
+
+You are working on GameClawEngine Phase 2B visible slice.
+
+Hard constraints:
+- IR is the single source of truth.
+- Godot SceneTree is runtime projection only.
+- Do not hardcode external asset URLs in runtime logic.
+- Do not expand scope beyond Sacred 6 assets.
+- Do not implement deferred items: complex UI, multi-enemy, turn-based, skills, RNG, inventory, multi-model routing, long-term memory, remote MCP, multi-client infra.
+- Prefer minimal diffs and small commits.
+- If a task touches assets, use asset_ref and registry first, not direct NodePath-first design.
+- If uncertain, update spec or draft JSON before code.

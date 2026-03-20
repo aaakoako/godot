@@ -1,0 +1,29 @@
+---
+description: Scope guard for current vertical slice
+globs:
+  - "spec/**"
+  - "data/**"
+  - "runtime/**"
+  - "scenes/**"
+alwaysApply: false
+---
+
+Current slice goal:
+- One hero (game_entity with presentation.icon_ref)
+- One enemy (game_entity with presentation.icon_ref)
+- One fireball
+- One HUD panel
+- One poison icon
+- One burn icon
+
+Allowed outcomes:
+- A visible demo scene
+- Registry-driven asset loading
+- Presentation binding driven rendering
+- Fallback asset behavior
+
+Forbidden outcomes:
+- New gameplay systems
+- General-purpose UI framework
+- Runtime web scraping
+- Autonomous asset downloading in game runtime

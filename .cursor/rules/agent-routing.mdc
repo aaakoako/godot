@@ -1,0 +1,12 @@
+---
+description: Route tasks to the right subagent
+alwaysApply: true
+---
+
+Delegation policy:
+- Planning or task breakdown -> planner
+- Asset source discovery and candidate listing -> asset-scout
+- Concrete file edits and implementation -> implementer
+- Validation, scope checks, regression checks -> verifier
+
+Never let a subagent introduce deferred features.
