@@ -1,7 +1,7 @@
 # GameClaw MCP（addons 端）
 
 本插件是 **Godot 内的 MCP 能力端**：在游戏进程里提供 TCP 服务，接收 JSON-RPC，执行 IR/场景/截图等操作。  
-**和 `gameclaw_mcp.py`（单文件 Python 桥）的区别、开发/发布环境** 见：[docs/MCP_DEV_VS_RELEASE.md](../../docs/MCP_DEV_VS_RELEASE.md)。
+**和 `tooling/gameclaw_mcp.py`（单文件 Python 桥）的区别、开发/发布环境** 见：`docs/README_MCP.md`（根目录 `gameclaw_mcp.py` 为兼容入口）。
 
 ## 开发环境下的行为
 
@@ -10,7 +10,7 @@
 - **自动写 MCP 主机配置**：监听成功后，会更新：
   - Cursor：`%USERPROFILE%/.cursor/mcp.json`
   - OpenCode：`%USERPROFILE%/.config/opencode/opencode.json`
-  并同步 `GODOT_PORT` 与 `gameclaw_mcp.py` 路径。
+  并同步 `GODOT_PORT` 与 `tooling/gameclaw_mcp.py` 路径（根目录 `gameclaw_mcp.py` 保留兼容入口）。
 
 ## 在 Godot 里看到本插件
 
@@ -21,7 +21,4 @@
 
 - F5 跑游戏，确认控制台出现 `Listening on ...` 与配置更新日志。
 - 重启你正在使用的 MCP 主机（Cursor/OpenCode）。
-- 具体连接/排障步骤见：
-  - [README_MCP.md](../../README_MCP.md)
-  - [docs/AI_SELF_VERIFY.md](../../docs/AI_SELF_VERIFY.md)
-  - [docs/MCP_DEV_VS_RELEASE.md](../../docs/MCP_DEV_VS_RELEASE.md)
+- 具体连接/排障步骤见 `../../docs/README_MCP.md`（已整合自检与开发/发布说明）。

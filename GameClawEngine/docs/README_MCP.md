@@ -2,7 +2,7 @@
 
 MCP 桥接已轻量化：**单文件 Python**（`gameclaw_mcp.py`）替代原 Node.js 目录，无需 npm/build。
 
-**自检（改完必跑）**：Godot F5 运行后，在项目根执行 `python verify_mcp.py`，退出码 0 即跑通。详见 [docs/AI_SELF_VERIFY.md](docs/AI_SELF_VERIFY.md)。
+**自检（改完必跑）**：Godot F5 运行后，在项目根执行 `python verify_mcp.py`，退出码 0 即跑通。
 
 ## 1. 依赖（一次性）
 
@@ -24,10 +24,17 @@ pip install -r requirements.txt
 2. 用 Cursor 或 OpenCode 打开工作区。
 3. 重启对应 MCP 主机后，`gameclaw` MCP 可用（get_ir_state、apply_patch 等）。
 
-## 4. 常见问题
+## 4. 开发环境 vs 发布环境
+
+- **开发 / 调试环境**：默认启用 MCP TCP（编辑器 F5 / Debug 运行）。
+- **发布给玩家的包**：默认**不**启用 MCP TCP，也不会要求玩家配置 MCP 主机。
+- 若后续需要创作者模式或专用发布包，可通过环境变量 `GAMECLAW_MCP_ENABLED=1` 显式开启。
+
+## 5. 常见问题
 
 | 现象 | 处理 |
 |------|------|
 | MCP 报错 "connect ECONNREFUSED" | 必须先 **F5 运行游戏**，游戏窗口保持打开。 |
 | 找不到 gameclaw_mcp 或 ModuleNotFoundError | 在项目根执行 `pip install fastmcp`；确认 Cursor 的 cwd 为 GameClawEngine 根目录（含 gameclaw_mcp.py）。 |
-| 端口/配置 | F5 后 Godot 会自动更新 Cursor 与 OpenCode 配置（`~/.cursor/mcp.json`、`~/.config/opencode/opencode.json`）；若需手动，见 [docs/MCP_DEV_VS_RELEASE.md](docs/MCP_DEV_VS_RELEASE.md)。 |
+| `verify_mcp.py` 非 0 退出 | 先确认 Godot 已 F5 启动，再在项目根执行 `python verify_mcp.py`；若仍失败，优先检查 Godot 控制台与 `~/.cursor/mcp.json` 中的端口。 |
+| 端口/配置 | F5 后 Godot 会自动更新 Cursor 与 OpenCode 配置（`~/.cursor/mcp.json`、`~/.config/opencode/opencode.json`）；若没有更新，优先重启游戏和 MCP 主机。 |

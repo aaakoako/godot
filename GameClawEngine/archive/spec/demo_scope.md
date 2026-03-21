@@ -51,3 +51,14 @@
 1. Kenney Game Assets（CC0）— 首选
 2. OpenGameArt（许可明确）— 补
 3. itch.io（CC0 / royalty-free）— 兜底
+
+---
+
+## 相关：制作 SOP
+
+本竖切片可作为 `combat_slice` 模板实例引用，完整生产线见：
+
+- [`production_sop.md`](production_sop.md)（总流程）
+- [`scene_template_sop.md`](scene_template_sop.md)（四文件约定）
+- [`asset_intake_sop.md`](asset_intake_sop.md)（registry）
+- [`acceptance_sop.md`](acceptance_sop.md)（L1/L2/L3）

@@ -6,6 +6,9 @@ on:
       - feature/gameclaw-engine-c1
     paths:
       - "GameClawEngine/**"
+  pull_request:
+    paths:
+      - "GameClawEngine/**"
   workflow_dispatch:
 
 env:

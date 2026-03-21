@@ -108,3 +108,14 @@ IR (Single Source of Truth)
 5. 扩展 `IRManager` / `UIController` 支持 sprite 投影
 6. 用 `regression_runner.py` 验证投影层渲染正确
 7. 接入真实图片资源（Kenney → OpenGameArt → itch.io CC0 顺序）
+
+---
+
+## 相关：制作 SOP
+
+阶段交付与「策划 → 制作 → 验收」固定顺序对齐时，见：
+
+- [`production_sop.md`](production_sop.md)
+- [`scene_template_sop.md`](scene_template_sop.md)
+- [`asset_intake_sop.md`](asset_intake_sop.md)
+- [`acceptance_sop.md`](acceptance_sop.md)

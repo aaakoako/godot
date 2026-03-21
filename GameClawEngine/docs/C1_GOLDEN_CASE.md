@@ -14,8 +14,8 @@
 2. 必须同步更新以下所有文件：
    - `docs/C1_GOLDEN_CASE.md`（本文档）
    - `test_data/sprint_c1_init.toon`（若初始状态变更）
-   - `orchestrator/verify_c1_ui_e2e.py`（终态断言、输入序列）
-   - `regression_runner.py`（若接口变更）
+   - `validation/orchestrator/verify_c1_ui_e2e.py`（终态断言、输入序列；`orchestrator/` 保留兼容入口）
+   - `tooling/regression_runner.py`（若接口变更；根目录 `regression_runner.py` 为兼容入口）
    - `.github/workflows/c1_golden.yml`（若环境/命令变更）
 3. 变更后必须本地通过 `python regression_runner.py --repeat 3`
 
@@ -102,12 +102,12 @@ ui_click(entity_id="btn_attack", count=4, interval_ms=120)
 
 | DoD | 内容 | 自动化覆盖 |
 |-----|------|-----------|
-| DoD 1 | 双端启动（Godot + Python 无报错） | 自动（`regression_runner.py` 启动流程） |
+| DoD 1 | 双端启动（Godot + Python 无报错） | 自动（`python regression_runner.py` 兼容入口，实际执行 `tooling/regression_runner.py`） |
 | DoD 2 | 第一击：hp 3→2，lbl 更新 | 自动（终态断言覆盖最终值，中间状态由 orchestrator 日志记录） |
 | DoD 3 | 击杀：hp=0, alive=false | 自动（终态断言） |
 | DoD 4 | 鞭尸：message="It's already dead!" | 自动（终态断言） |
-| DoD 5 | 非法 patch 返回 error + layer + evidence_path | 自动（`mock_orchestrator.py --test-illegal`） |
-| DoD 6 | 测试后环境恢复 | 自动（`verify_c1_ui_e2e.py` `try/finally` 恢复 `project.godot`） |
+| DoD 5 | 非法 patch 返回 error + layer + evidence_path | 自动（`python orchestrator/mock_orchestrator.py --test-illegal` 兼容入口，实际执行 `validation/orchestrator/mock_orchestrator.py`） |
+| DoD 6 | 测试后环境恢复 | 自动（`python orchestrator/verify_c1_ui_e2e.py` 兼容入口，进程级隔离：通过 `GAMECLAW_INITIAL_IR_PATH` 注入 C.1 初始态，不改写 `project.godot`） |
 
 ---
 
@@ -129,7 +129,7 @@ python regression_runner.py --repeat 3
 python regression_runner.py --repeat 1 --ci
 ```
 
-输出结果写入 `artifacts/c1_golden_summary.json`，日志写入 `artifacts/run_NNN_godot.log`。
+输出结果写入 `artifacts/c1_golden_summary.json`；每轮日志写入 `artifacts/run_NNN/e2e_godot.log` 与 `artifacts/run_NNN/e2e_orchestrator.log`。
 
 ---
 
@@ -138,8 +138,7 @@ python regression_runner.py --repeat 1 --ci
 | 文件 | 说明 |
 |------|------|
 | `test_data/sprint_c1_init.toon` | 初始世界状态（冻结） |
-| `orchestrator/verify_c1_ui_e2e.py` | E2E 测试执行主体 |
-| `orchestrator/mock_orchestrator.py` | 外部决策主循环（硬编码规则） |
-| `regression_runner.py` | 回归统一入口 |
+| `validation/orchestrator/verify_c1_ui_e2e.py` | E2E 测试执行主体（`orchestrator/` 提供兼容入口） |
+| `validation/orchestrator/mock_orchestrator.py` | 外部决策主循环（硬编码规则；`orchestrator/` 提供兼容入口） |
+| `tooling/regression_runner.py` | 回归执行主体（根目录 `regression_runner.py` 为兼容入口） |
 | `.github/workflows/c1_golden.yml` | CI workflow |
-| `docs/SPRINT_C1_ATTACK_DUMMY.md` | Sprint C.1 完整设计文档 |

@@ -7,6 +7,19 @@
 # Runtime / dev logs
 *.log
 
+# Runtime artifacts
+artifacts/
+
+# Local project metadata
+.vscode/
+
+# Godot generated metadata/imports
+*.uid
+*.import
+
+# Local third-party asset packs (not source-controlled in this repo)
+assets/kenney_*/
+
 # Python
 __pycache__/
 .venv/
