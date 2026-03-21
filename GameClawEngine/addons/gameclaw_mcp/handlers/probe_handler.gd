@@ -173,7 +173,7 @@ func _process(delta: float) -> void:
 				"visible":
 					value = target.visible
 				_:
-					value = str(target.get(field_str))
+					value = target.get(field_str)
 		current[field_str] = value
 		if not prev.has(field_str) or str(prev[field_str]) != str(value):
 			changed = true

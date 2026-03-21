@@ -4,10 +4,11 @@ class_name MCPEntityHandler
 extends RefCounted
 
 const LAYER_IR_STATE: String = "ir_state"
+const SELF_SCRIPT: Script = preload("res://addons/gameclaw_mcp/handlers/entity_handler.gd")
 
 
 static func register_tools(router: MCPCommandRouter) -> void:
-	var handler := MCPEntityHandler.new()
+	var handler := SELF_SCRIPT.new() as MCPEntityHandler
 	router.register_handler_instance(handler)
 	router.register("get_entity_debug_view", handler._handle_get_entity_debug_view)
 

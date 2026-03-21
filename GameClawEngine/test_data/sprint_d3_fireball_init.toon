@@ -47,6 +47,7 @@ effect_defs:
         op: add
         value: -2.0
     granted_tags[1]: state.burning
+active_effects:
 abilities:
   ability_fireball:
     type: ability

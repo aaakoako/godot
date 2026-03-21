@@ -13,10 +13,11 @@ var _projectile_counter: int = 0
 
 func _ready() -> void:
 	print("AbilitySystem: ready")
-	_rebuild_action_map()
 	var ir_manager: Node = _get_ir_manager()
 	if ir_manager != null:
 		ir_manager.patch_applied.connect(_on_patch_applied)
+		ir_manager.ir_loaded.connect(_on_ir_loaded)
+	call_deferred("_rebuild_action_map")
 
 
 ## Rebuild input_action → [ability_id] mapping from current IR state.
@@ -78,7 +79,7 @@ func _activate_ability(ir_manager: Node, state: Dictionary, ability_id: String) 
 		return {"ok": false, "reason": "owner '%s' not found" % owner_id}
 
 	var lifecycle_path: String = "/entities/%s/components/lifecycle/alive" % owner_id
-	var alive_result: Dictionary = ir_manager._resolve_ir_path(lifecycle_path)
+	var alive_result: Dictionary = ir_manager._resolve_ir_path(state, lifecycle_path)
 	if alive_result.get("found", false) and alive_result["value"] == false:
 		return {"ok": false, "reason": "owner '%s' is dead" % owner_id}
 
@@ -159,7 +160,7 @@ func _spawn_projectile(ir_manager: Node, state: Dictionary, owner_id: String, pr
 	var spawn_y: float = 0.0
 
 	# Read owner transform_2d position if available.
-	var pos_result: Dictionary = ir_manager._resolve_ir_path("/entities/%s/components/transform_2d/position" % owner_id)
+	var pos_result: Dictionary = ir_manager._resolve_ir_path(state, "/entities/%s/components/transform_2d/position" % owner_id)
 	if pos_result.get("found", false) and pos_result["value"] is Array:
 		var pos_arr: Array = pos_result["value"] as Array
 		if pos_arr.size() >= 2:
@@ -189,6 +190,10 @@ func _spawn_projectile(ir_manager: Node, state: Dictionary, owner_id: String, pr
 		return {"ok": false, "reason": "spawn patch failed: %s" % result.get("reason", "?")}
 
 	return {"ok": true, "projectile_id": instance_id}
+
+
+func _on_ir_loaded() -> void:
+	_rebuild_action_map()
 
 
 func _on_patch_applied(_ops: Array) -> void:

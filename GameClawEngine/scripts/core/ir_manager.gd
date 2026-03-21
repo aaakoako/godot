@@ -61,6 +61,10 @@ func ensure_initial_state_loaded() -> void:
 
 
 func _get_initial_state_path() -> String:
+	var env_override: String = OS.get_environment("GAMECLAW_INITIAL_IR_PATH")
+	if not env_override.is_empty():
+		return env_override
+
 	var override_path: Variant = ProjectSettings.get_setting("application/config/initial_ir_path")
 	if override_path is String and (override_path as String).length() > 0:
 		return override_path as String
@@ -521,7 +525,7 @@ func _read_file(path: String) -> String:
 ## Return a single attribute dict {current, max} for a game_entity, or empty if not found.
 func get_attribute(entity_id: String, attr_name: String) -> Dictionary:
 	var path: String = "/entities/%s/components/attribute_set/attributes/%s" % [entity_id, attr_name]
-	var result: Dictionary = _resolve_ir_path(path)
+	var result: Dictionary = _resolve_ir_path_current(path)
 	if result["found"] and result["value"] is Dictionary:
 		return (result["value"] as Dictionary).duplicate()
 	return {}
@@ -530,7 +534,7 @@ func get_attribute(entity_id: String, attr_name: String) -> Dictionary:
 ## Return a copy of the runtime_tags array for a game_entity, or empty array.
 func get_tags(entity_id: String) -> Array:
 	var path: String = "/entities/%s/components/tag_set/runtime_tags" % entity_id
-	var result: Dictionary = _resolve_ir_path(path)
+	var result: Dictionary = _resolve_ir_path_current(path)
 	if result["found"] and result["value"] is Array:
 		return (result["value"] as Array).duplicate()
 	return []
@@ -540,8 +544,8 @@ func get_tags(entity_id: String) -> Array:
 func get_all_tags(entity_id: String) -> Array:
 	var base_path: String = "/entities/%s/components/tag_set/base_tags" % entity_id
 	var runtime_path: String = "/entities/%s/components/tag_set/runtime_tags" % entity_id
-	var base_result: Dictionary = _resolve_ir_path(base_path)
-	var runtime_result: Dictionary = _resolve_ir_path(runtime_path)
+	var base_result: Dictionary = _resolve_ir_path_current(base_path)
+	var runtime_result: Dictionary = _resolve_ir_path_current(runtime_path)
 	var combined: Array = []
 	if base_result["found"] and base_result["value"] is Array:
 		for t: Variant in (base_result["value"] as Array):
@@ -583,7 +587,7 @@ func remove_runtime_tag(entity_id: String, tag: String) -> Dictionary:
 
 
 ## Resolve a slash-separated IR path to {found, value}. Internal helper.
-func _resolve_ir_path(path: String) -> Dictionary:
+func _resolve_ir_path_current(path: String) -> Dictionary:
 	if not path.begins_with("/"):
 		return {"found": false, "value": null}
 	var segments: PackedStringArray = path.substr(1).split("/")

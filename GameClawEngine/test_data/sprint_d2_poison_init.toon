@@ -15,6 +15,7 @@ entities:
       lifecycle:
         alive: true
         death_state: alive
+active_effects:
 effect_defs:
   poison_basic:
     type: gameplay_effect_def

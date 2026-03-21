@@ -86,6 +86,7 @@ func _process_one_projectile(proj_id: String, proj_data: Dictionary, targets: Ar
 	var speed: float = _to_float(proj_data.get("_speed", 400.0))
 	var velocity: Variant = proj_data.get("_velocity", [1.0, 0.0])
 	var proj_def_id: String = str(proj_data.get("_projectile_def", ""))
+	var owner_id: String = str(proj_data.get("_owner", ""))
 
 	if velocity is not Array or (velocity as Array).size() < 2:
 		return
@@ -107,6 +108,8 @@ func _process_one_projectile(proj_id: String, proj_data: Dictionary, targets: Ar
 	# Check hits before updating position.
 	for target_info: Dictionary in targets:
 		var target_id: String = target_info["id"]
+		if not owner_id.is_empty() and target_id == owner_id:
+			continue
 		var target_data: Dictionary = target_info["data"]
 		var target_components: Dictionary = target_data.get("components", {}) as Dictionary
 		var target_transform: Dictionary = target_components.get("transform_2d", {}) as Dictionary

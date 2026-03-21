@@ -50,9 +50,15 @@ func _create_sprite_material(entity_data: Dictionary) -> StandardMaterial3D:
 	var local_path: String = ""
 	if not icon_ref.is_empty():
 		local_path = _resolve_asset_ref(icon_ref)
-	if not local_path.is_empty() and FileAccess.file_exists(local_path):
-		var tex := ImageTexture.create_from_image(Image.load_from_file(local_path))
-		mat.albedo_texture = tex
+	if not local_path.is_empty():
+		# Image.load_from_file() requires absolute filesystem path, not res:// path
+		var abs_path: String = ProjectSettings.globalize_path("res://" + local_path)
+		if FileAccess.file_exists(abs_path):
+			var tex: ImageTexture = ImageTexture.create_from_image(Image.load_from_file(abs_path))
+			mat.albedo_texture = tex
+		else:
+			var fallback: String = str(entity_data.get("fallback_color", "#FFFFFF"))
+			mat.albedo_color = Color.html(fallback)
 	else:
 		var fallback: String = str(entity_data.get("fallback_color", "#FFFFFF"))
 		mat.albedo_color = Color.html(fallback)
